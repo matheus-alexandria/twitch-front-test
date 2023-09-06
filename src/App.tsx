@@ -8,17 +8,18 @@ const url = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=
 
 function App() {
   async function saveRefreshToken(code: string) {
-    const response = await fetch('http://localhost:9003/twitch', {
+    await fetch('http://localhost:9003/twitch', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         code,
+        isAdmin: true,
+        isVip: false,
+        allowedUsers: 'boleto'
       })
-    });
-
-    console.log(response.json());
+    }).then(res => res.json());
   }
 
   useEffect(() => {
@@ -27,17 +28,20 @@ function App() {
 
     const code = url.searchParams.get('code');
     if (code) {
-      // history.pushState({}, document.title, window.location.pathname);
+      history.pushState({}, document.title, window.location.pathname);
       saveRefreshToken(code);
     }
   }, []);
 
   return (
     <div style={{
-      margin: "10px",
+      margin: "0px",
       width: "100%",
       height: "100vh",
       overflow: 'hidden',
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
     }}>
       {/* <button onClick={() => setCount((c) => c + 1)} >{`Click ${count}`}</button> */}
       <a style={{ fontSize: 50 }} href={url}>Click</a>
